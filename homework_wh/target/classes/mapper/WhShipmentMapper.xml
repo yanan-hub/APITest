@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--namespace是映射文件的命名空间，在mybatis中空间有一个非常重要的作用  -->
+<mapper namespace="cn.bgs.mapper.WhShipmenMapper">  <!--格式：cn.bgs.mapper.OrdersMapper-->
+
+    <!--映射规则-->
+    <resultMap id="WhShipmen_WhCategory" type="cn.bgs.pojo.WhShipment">
+        <id column="id" property="id"></id>
+        <result column="uid" property="uid"></result>
+        <result column="cid" property="cid"></result>
+        <result column="goodsname" property="goodsname"></result>
+        <result column="number" property="number"></result>
+        <result column="addingTime" property="addingTime"></result>
+        <result column="message" property="message"></result>
+        <result column="available" property="available"></result>
+
+
+        <association property="whCategory" javaType="cn.bgs.pojo.WhCategory">
+            <id column="id" property="id"></id>
+            <result column="name" property="name"></result>
+        </association>
+    </resultMap>
+
+    <resultMap id="WhShipmen_WhCategory_g" type="cn.bgs.pojo.WhShipment">
+        <id column="id" property="id"></id>
+        <result column="uid" property="uid"></result>
+        <result column="cid" property="cid"></result>
+        <result column="goodsname" property="goodsname"></result>
+        <result column="number" property="number"></result>
+        <result column="addingTime" property="addingTime"></result>
+        <result column="message" property="message"></result>
+        <result column="available" property="available"></result>
+
+
+        <association property="whCategory" javaType="cn.bgs.pojo.WhCategory">
+            <id column="id" property="id"></id>
+            <result column="name" property="name"></result>
+        </association>
+
+        <association property="whGoods" javaType="cn.bgs.pojo.WhGoods">
+            <id column="id" property="id"></id>
+            <result column="goodsname" property="goodsname"></result>
+        </association>
+    </resultMap>
+
+    <!-- //提交申请
+    boolean applicationForSubmission(@Param("whShipment") WhShipment whShipment,@Param("uId") Integer uId);-->
+    <insert id="applicationForSubmission">
+        insert into wh_shipment (id,uid,cid,goodsname,number,addingTime,available) values (null,#{uId},#{whShipment.cid},#{whShipment.goodsname},#{whShipment.number},#{whShipment.addingTime},0)
+    </insert>
+
+    <!--//查询所有未审批的记录
+    List<WhShipment> findAllApprovalGoods();-->
+    <select id="findAllApprovalGoods" resultMap="WhShipmen_WhCategory">
+        select * from wh_shipment sh,wh_category c  where sh.cid = c.id and available = 0
+    </select>
+
+    <!--//通过申请
+    boolean updateWhShipment(Integer id);-->
+    <update id="updateWhShipment">
+        update wh_shipment set available = 1 where id = #{id}
+    </update>
+
+    <!--//未通过申请
+    boolean noPassApprovalGoods(@Param("id") Integer id, @Param("message") String message);-->
+    <update id="noPassApprovalGoods">
+        update wh_shipment set message = #{message} ,available = 2 where id = #{id}
+    </update>
+
+    <!-- //查询所有已经审批的记录
+    List<WhShipment> findAllApprovalGoodsByA(Integer uId);-->
+    <!--         select * from wh_shipment sh,wh_category c ,wh_goods g where sh.cid = c.id and available != 0 and sh.goodsname = g.goodsname and uid = #{uid}-->
+    <select id="findAllApprovalGoodsByA" resultMap="WhShipmen_WhCategory">
+    select * from wh_shipment sh,wh_category c  where sh.cid = c.id and available != 0 and uid = #{uid}
+    </select>
+
+    <!-- //重新提交申请
+    boolean applicationShipment2(WhShipment whShipment);-->
+    <update id="applicationShipment2">
+        update wh_shipment set cid = #{cid} ,goodsname = #{goodsname},number = #{number},addingTime = #{addingTime},available = 0 , message = "" where id = #{id}
+    </update>
+
+    <!--//出货记录
+    List<WhShipment> findAllApprovalGoodsByPass();-->
+    <select id="findAllApprovalGoodsByPass" resultMap="WhShipmen_WhCategory">
+        select * from wh_shipment sh,wh_category c  where sh.cid = c.id and available = 1
+    </select>
+
+    <!-- //模糊查询
+    List<WhShipment> selectWhShipmentByLikeName2(String goodsname);-->
+    <select id="selectWhShipmentByLikeName2" resultMap="WhShipmen_WhCategory">
+        select * from wh_shipment sh,wh_category c  where sh.cid = c.id and available = 1 and goodsname like '%${goodsname}%'
+    </select>
+
+    <!--  //统计图
+    List<WhShipment> numberHistogram();-->
+    <select id="numberHistogram" resultType="cn.bgs.pojo.WhShipment">
+        select sum(number) number,goodsname from wh_shipment where available = 1 GROUP BY goodsname
+    </select>
+</mapper>

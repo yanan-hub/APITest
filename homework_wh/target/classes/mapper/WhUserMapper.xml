@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--namespace是映射文件的命名空间，在mybatis中空间有一个非常重要的作用  -->
+<mapper namespace="cn.bgs.mapper.WhUserMapper">  <!--格式：cn.bgs.mapper.OrdersMapper-->
+
+    <!--  //登录
+      WhUser  login(@Param("username") String username, @Param("password") String password);-->
+    <select id="login" resultType="cn.bgs.pojo.WhUser">
+        select * from wh_user where username=#{username} and password=#{password}
+    </select>
+
+    <!--  //查询
+    WhUser queryWhUser(String username);-->
+    <select id="queryWhUser" resultType="cn.bgs.pojo.WhUser">
+        select * from wh_user where username=#{username}
+    </select>
+
+    <!--//用户全查
+    List<WhUser> findAll();-->
+    <select id="findAll" resultType="cn.bgs.pojo.WhUser">
+        select * from wh_user
+    </select>
+
+    <!-- //添加用户
+    boolean addOrUpdateWhUser(WhUser whUser);-->
+    <insert id="addOrUpdateWhUser">
+        <if test=" id != null">
+            update wh_user set username = #{username},password = #{password},sex = #{sex},phonenumber = #{phonenumber} where id = #{id}
+        </if>
+        <if test=" id == null">
+        insert into wh_user values (null,#{username},#{password},#{sex},#{phonenumber})
+        </if>
+    </insert>
+
+    <!--//删除用户
+    boolean deleteWhUser(Integer id);-->
+    <delete id="deleteWhUser">
+        delete from wh_user where id = #{id}
+    </delete>
+</mapper>

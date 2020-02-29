@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--namespace是映射文件的命名空间，在mybatis中空间有一个非常重要的作用  -->
+<mapper namespace="cn.bgs.mapper.WhCategoryMapper">  <!--格式：cn.bgs.mapper.OrdersMapper-->
+
+    <!--  //全查
+    List<WhCategory> findAllWhCategory();-->
+    <select id="findAllWhCategory" resultType="cn.bgs.pojo.WhCategory">
+         SELECT id ,name,pid,type,if(type != 3,'true','false') isParent from  wh_category
+    </select>
+
+    <!--//添加
+    boolean addWhCategory(WhCategory whCategory);-->
+    <insert id="addWhCategory"  keyProperty="id" useGeneratedKeys="true">
+        <if test="type == 1">
+            insert into wh_category values (null,#{code},#{id},'2')
+        </if>
+        <if test="type == 2">
+            insert into wh_category values (null,#{code},#{id},'3')
+        </if>
+    </insert>
+
+    <!--//修改
+    boolean updateWhCategory(WhCategory whCategory);-->
+    <update id="updateWhCategory">
+        update wh_category set name = #{name}  where id = #{id}
+    </update>
+
+    <!--//删除
+    boolean deleteWhCategory(WhCategory whCategory);-->
+    <delete id="deleteWhCategory">
+        delete from wh_category where id = #{id}
+    </delete>
+
+    <!--//查所有类别名称
+    List<WhCategory> findAllWhCategoryName();-->
+    <select id="findAllWhCategoryName" resultType="cn.bgs.pojo.WhCategory">
+         SELECT id ,name from  wh_category
+    </select>
+</mapper>

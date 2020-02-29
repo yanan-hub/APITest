@@ -1,0 +1,15 @@
+.tooltip-inner{
+    background: #fabd34 !important;/* /!*修改背景色*!/*/
+text-align: right !important;/*/!*字体左对齐*!/*/
+color: #363636 !important;/*/!*字体颜色*!/*/
+border:1px solid rgba(167, 178, 239, 0.01);/*/!*添加boder*!/*/
+width: 120px;/*提示框的宽度增大*/
+    max-width: 250px !important;/*修改宽度*/
+}
+.tooltip-arrow{
+    border-bottom-color: #6855ff !important;/*修改三角形的颜色*/
+opacity: 100%;/*三角形透明*/
+}
+.tooltip{
+    opacity: 1 !important;/*让整个tooltip不透明*/
+}

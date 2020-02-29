@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--namespace是映射文件的命名空间，在mybatis中空间有一个非常重要的作用  -->
+<mapper namespace="cn.bgs.mapper.WhGoodsMapper">  <!--格式：cn.bgs.mapper.OrdersMapper-->
+
+    <!--映射规则-->
+    <resultMap id="WhGoods_WhCategory" type="cn.bgs.pojo.WhGoods">
+        <id column="id" property="id"></id>
+        <result column="cId" property="cId"></result>
+        <result column="goodsname" property="goodsname"></result>
+        <result column="number" property="number"></result>
+        <result column="addingTime" property="addingTime"></result>
+
+
+        <association property="whCategory" javaType="cn.bgs.pojo.WhCategory">
+            <id column="id" property="id"></id>
+            <result column="name" property="name"></result>
+        </association>
+    </resultMap>
+
+    <!--  //全查
+    List<WhGoods> findAllGoods();-->
+    <select id="findAllGoods" resultMap="WhGoods_WhCategory">
+          SELECT * from  wh_goods g,wh_category c where g.cId = c.id
+    </select>
+
+    <!--//添加
+    boolean addWhGoods(WhGoods whGoods);-->
+    <insert id="addWhGoods">
+        insert into wh_goods (id,cId,goodsname,number,addingTime) values (null,#{cId},#{goodsname},#{number},#{addingTime})
+    </insert>
+
+    <!--//根据类别查询
+    List<WhGoods> selectWhGoodsByCid(Integer cId);-->
+    <select id="selectWhGoodsByCid" resultMap="WhGoods_WhCategory">
+        <if test="cId == 0">
+            SELECT * from  wh_goods g,wh_category c where g.cId = c.id
+        </if>
+        <if test="cId != 0">
+            SELECT * from  wh_goods g,wh_category c where g.cId = c.id and g.cId = #{cId}
+        </if>
+    </select>
+
+    <!--//根据物品名称模糊查询
+    List<WhGoods> selectWhGoodsByGoodsName(String goodsname);-->
+    <select id="selectWhGoodsByGoodsName" resultMap="WhGoods_WhCategory">
+            SELECT * from  wh_goods g,wh_category c where g.cId = c.id and g.goodsname like '%${value}%'
+    </select>
+
+    <!--//修改
+    boolean UpdateWhGoods(WhGoods whGoods);-->
+    <update id="UpdateWhGoods">
+        update wh_goods set goodsname = #{goodsname},cId = #{cId},number = #{number},addingTime = #{addingTime} where id = #{id}
+    </update>
+
+    <!--//删除
+    boolean deleteWhGoods(Integer id);-->
+    <delete id="deleteWhGoods">
+        delete from wh_goods where id = #{id}
+    </delete>
+
+    <!--//通过申请，修改数量
+    boolean UpdateWhGoodsByName(@Param("goodsname") String goodsname, @Param("number") Integer number);-->
+    <update id="UpdateWhGoodsByName">
+        update wh_goods set number = #{number} where goodsname = #{goodsname}
+    </update>
+
+    <!--//求数量
+    Integer selectNumnberByName(String goodsname);-->
+    <select id="selectNumnberByName" resultType="java.lang.Integer">
+        select number from wh_goods where goodsname = #{goodsname}
+    </select>
+</mapper>
