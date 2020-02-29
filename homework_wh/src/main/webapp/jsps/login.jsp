@@ -53,7 +53,7 @@
                                 <ul>
                                     <li class="frame_style form_error">
                                         <label class="user_icon"></label>
-                                        <input name="username" type="text" id="username"/><i class="usernameIdI">用户名</i></li>
+                                        <input name="username" type="text" id="username"/><i class="usernameIdI">用户名github</i></li>
                                     <li class="frame_style form_error">
                                         <label class="password_icon"></label>
                                         <input name="password" type="password" id="password"/><i class="passwordIdI">密码</i><span class="passwordSpan"></span></li>
